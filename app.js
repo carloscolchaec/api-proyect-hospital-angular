@@ -4,8 +4,11 @@ const app = express();
 const router = require("./routes");
 const personRouter = require("./routes/person");
 
+
+
 const AppError = require("./utils/appError");
 const ErrorHandle = require("./utils/errorHandle");
+const bodyParser = require("body-parser");
 
 const PORT = 3350;
 const corsOptions ={
@@ -14,10 +17,12 @@ const corsOptions ={
     optionSuccessStatus:200,
 }
 
+app.use(bodyParser.json())
 app.use(cors(corsOptions))
 
 app.use(router);
 app.use(personRouter);
+
 
 app.all("*", (req, res, next) => {
     next(new AppError(`The URL ${req.originalURL} does not exists`, 404));

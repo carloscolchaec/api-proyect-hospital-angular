@@ -1,20 +1,69 @@
+const sha256 = require("js-sha256");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const AppError = require("../utils/appError");
 const conn = require("../services/db");
+require("dotenv").config();
 
-let jwtSecretKey = process.env.KEY_ACCESS_SECRET;
+const jwtSecretKey = process.env.KEY_ACCESS_SECRET;
 
-// API: /login?cedula=variable&password=variable
+// REGISTER
+exports.ControllerRegister = (req, res, next) => {
+  let {
+    cedula,
+    nombres,
+    apellidos,
+    tipo_persona,
+    especialidad,
+    celular,
+    correo,
+    fecha_nacimiento,
+    genero,
+    ocupacion,
+    tipo_sangre,
+    ciudad,
+    password,
+  } = req.body;
 
-exports.ControllerLogin = (req, res, next) => {
-  let { cedula, password } = req.query;
+  let passwordEncript = sha256(password);
+  
   conn.query(
-    `SELECT * FROM persona WHERE cedula = '${cedula}' AND password = '${password}'`,
+    `SELECT * FROM persona WHERE cedula = '${cedula}'`,
+    function(err, data, fields) {
+      if(data.rowCount >= 1) {
+        if (err) return next(new AppError(err, 500));
+        res.status(200).json({
+                status: "failed",
+                created: "BAD",
+                report: "USER ALREADY EXISTS"
+              });
+      } else {
+        conn.query(
+          `INSERT INTO persona (cedula, apellidos, nombres, tipo_persona, especialidad, celular, correo, fecha_nacimiento, genero, ocupacion, tipo_sangre, ciudad, password) 
+        VALUES ('${cedula}','${apellidos}','${nombres}','${tipo_persona}'::INTEGER,'${especialidad}'::INTEGER, '${celular}', '${correo}', '${fecha_nacimiento}', '${genero}', '${ocupacion}', '${tipo_sangre}', '${ciudad}', '${passwordEncript}');`,
+          function (err, data, fields) {
+            if (err) return next(new AppError(err, 500));
+            res.status(200).json({
+              status: "success",
+              created: "OK",
+              report: "USER CREATED"
+            });
+          }
+        );
+      }
+    }
+  )
+
+};
+
+// LOGIN
+exports.ControllerLogin = (req, res, next) => {
+  let { cedula, password } = req.body;
+  let passwordEncript = sha256(password);
+  conn.query(
+    `SELECT * FROM persona WHERE cedula = '${cedula}' AND password = '${passwordEncript}'`,
     function (err, data) {
       if (err) return next(new AppError(err, 500));
-
       if (data.rows.length === 0) {
         res.status(200).json({
           status: "error",
@@ -26,14 +75,11 @@ exports.ControllerLogin = (req, res, next) => {
           name: data.rows[0].nombres,
           lastname: data.rows[0].apellidos,
           email: data.rows[0].correo,
-        }
-  
-        console.log(datGetUser)
-  
+        };
         let tokenGeneated = generateAccessToken(datGetUser);
-  
+
         function generateAccessToken(data) {
-          return jwt.sign(data, jwtSecretKey, { expiresIn: '3h' });
+          return jwt.sign(data, jwtSecretKey, { expiresIn: "3h" });
         }
         res.status(200).json({
           status: "success",

@@ -7,6 +7,8 @@ const person = express.Router();
 ==================================================== */ 
 
 
-person.route("/login").get(controllers.ControllerLogin);
+person.route('/login').post(controllers.ControllerLogin);
+person.route('/register').post(controllers.ControllerRegister);
+
 
 module.exports = person;
