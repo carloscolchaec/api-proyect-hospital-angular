@@ -7,8 +7,11 @@ const person = express.Router();
 ==================================================== */ 
 
 
-person.route('/login').post(controllers.ControllerLogin);
-person.route('/register').post(controllers.ControllerRegister);
+person.route('/login').post(controllers.ControllerLogin); // LOGIN
+person.route('/register').post(controllers.ControllerRegister); // CREATE PERSON
 
+person.route('/personas').post(controllers.ControllerAllPersons); // SHOW PERSONS
+person.route('/persona').put(controllers.ControllerEditPerson); // EDIT PERSON
+person.route('/persona').delete(controllers.ControllerDeletePerson); // DELETE PERSON
 
 module.exports = person;

@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 const router = require("./routes");
 const personRouter = require("./routes/person");
-
+const especialidadRouter = require("./routes/especialidad");
 
 
 const AppError = require("./utils/appError");
@@ -22,6 +22,7 @@ app.use(cors(corsOptions))
 
 app.use(router);
 app.use(personRouter);
+app.use(especialidadRouter);
 
 
 app.all("*", (req, res, next) => {
