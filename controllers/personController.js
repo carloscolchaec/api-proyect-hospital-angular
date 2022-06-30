@@ -70,7 +70,7 @@ exports.ControllerEditPerson = (req, res, next) => {
 
 // DELETE PERSON
 exports.ControllerDeletePerson = (req, res, next) => {
-  let { cedula } = req.body;
+  let { cedula } = req.params;
   
   conn.query(
     `SELECT * FROM persona WHERE cedula = '${cedula}'`,
