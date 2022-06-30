@@ -92,7 +92,7 @@ exports.modifyEspecialidad = (req, res, next) => {
 };
 
 exports.deleteEspecialidad = (req, res, next) => {
-  let { id } = req.body;
+  let { id } = req.params;
   conn.query(
     `SELECT * FROM especialidad WHERE id = '${id}'`,
     function (err, data, fields) {
