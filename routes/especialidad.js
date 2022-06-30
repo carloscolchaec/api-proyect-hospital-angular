@@ -9,6 +9,6 @@ const especialidad = express.Router();
 especialidad.route("/especialidades").post(controllers.allEspecialidades);
 especialidad.route("/crear-especialidad").post(controllers.createEspecialidad);
 especialidad.route("/especialidad").put(controllers.modifyEspecialidad);
-especialidad.route("/especialidad").delete(controllers.deleteEspecialidad);
+especialidad.route("/especialidad/:id").delete(controllers.deleteEspecialidad);
 
 module.exports = especialidad;
