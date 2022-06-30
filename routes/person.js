@@ -12,6 +12,6 @@ person.route('/register').post(controllers.ControllerRegister); // CREATE PERSON
 
 person.route('/personas').post(controllers.ControllerAllPersons); // SHOW PERSONS
 person.route('/persona').put(controllers.ControllerEditPerson); // EDIT PERSON
-person.route('/persona').delete(controllers.ControllerDeletePerson); // DELETE PERSON
+person.route('/persona/:cedula').delete(controllers.ControllerDeletePerson); // DELETE PERSON
 
 module.exports = person;
